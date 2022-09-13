@@ -38,15 +38,10 @@ public class MainController {
 
 	// index
 
-	// index
-
 	@GetMapping("/")
 	public String index(Model model) {
 		model.addAttribute("newUser", new User());
 		model.addAttribute("newLogin", new LoginUser());
-
-		Page<Discussion> pageDiscussions = discussionService.getDiscussionPage(0, 10);
-		model.addAttribute("discussions", pageDiscussions.getContent());
 
 		return "index.jsp";
 	}
