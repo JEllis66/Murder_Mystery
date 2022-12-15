@@ -1,52 +1,80 @@
--- This file essentially drops the database and created it again from scratch. decent for a fresh start and to be able to see the tables without having to edit them;
+-- MySQL Workbench Forward Engineering
 
-DROP DATABASE IF EXISTS lancaster_theater;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
-CREATE DATABASE lancaster_theater;
+-- -----------------------------------------------------
+-- Schema lancasters_schema
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `lancasters_schema` ;
 
-USE lancaster_theater;
+-- -----------------------------------------------------
+-- Schema lancasters_schema
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `lancasters_schema` DEFAULT CHARACTER SET utf8 ;
+USE `lancasters_schema` ;
 
--- dropping the table if i forgot to drop it
-DROP TABLE IF EXISTS named_Character;
+-- -----------------------------------------------------
+-- Table `lancasters_schema`.`characters`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `lancasters_schema`.`characters` ;
 
-/*
-
-named_Character represents ANY person involved in the story in any way, 
-whether or not they are played by a player, they are an NPC, 
-or even if they are just a person who is mentioned in passing but never is present in the house
-
-*/
-
-CREATE TABLE named_Character (
-	characterID SMALLINT NOT NULL AUTO_INCREMENT,
-    firstName VARCHAR(20) NOT NULL,
-    lastName VARCHAR(20) NOT NULL,
-    userName VARCHAR(20), -- can be null if the character is not a player
-    passCode VARCHAR(20), -- also can be null if the character is not a player
-    isPlayerCharacter BOOL NOT NULL, -- 1 if the player is a PC, if 1 they will have a username and passcode
-    isNPC BOOL NOT NULL, -- 1 if they are an NPC, examples are Dan, Jamie, Tyler (jerry) and Ashley (cop). some will have a user name and passcode
-    isInHouse BOOL NOT NULL, -- if this is 0, it is a character mentioned but not present, eg Baron Lancaster (Jerry's Dad)
-    PRIMARY KEY (characterID)
-    );
-    
-DROP TABLE IF EXISTS story_Item; -- same as previous table
-/*
-story_Item represents anything that can be looked up in the app. 
-Some of them are public (meaning everyone can see it), 
-others will require some kind of code or search to find.
-All of that should be indicated in this table
-*/
-
-CREATE TABLE story_Item (
-	itemID SMALLINT NOT NULL AUTO_INCREMENT,
-    itemName VARCHAR(20), -- should be a short name
-    itemDescription VARCHAR(1000), -- backend only descriptor for the item.
-    category VARCHAR(20), -- eg general person descriptor, hidden item, character briefing
-    howToFind VARCHAR(200), -- backend description for how to find the item itself
-    appTab VARCHAR(20), -- page on the app on which to search to find this item eg party attendees, item info, interview transcript. some items should be searchable on multiple tabs (how to configure?)
-    findTerm VARCHAR(20), -- phrase that needs to be typed in order to bring up the item (how should we configure this if we want there to be multiple possible search terms?)
-    PRIMARY KEY (itemID)
-    );
+CREATE TABLE IF NOT EXISTS `lancasters_schema`.`characters` (
+  `idcharacters` INT NOT NULL AUTO_INCREMENT,
+  `login_password` VARCHAR(255) NOT NULL,
+  `login_username` VARCHAR(45) NOT NULL,
+  `role` VARCHAR(255) NOT NULL,
+  `relationship` TEXT(1000) NULL,
+  `potential_motive` VARCHAR(255) NULL,
+  `created_at` DATETIME NULL DEFAULT NOW(),
+  `updated_at` DATETIME NULL DEFAULT NOW() ON UPDATE NOW(),
+  PRIMARY KEY (`idcharacters`))
+ENGINE = InnoDB;
 
 
-SELECT * FROM named_character;
+-- -----------------------------------------------------
+-- Table `lancasters_schema`.`storyitems`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `lancasters_schema`.`storyitems` ;
+
+CREATE TABLE IF NOT EXISTS `lancasters_schema`.`storyitems` (
+  `idstoryitems` INT NOT NULL,
+  `story_title` VARCHAR(255) NULL,
+  `description` VARCHAR(255) NULL,
+  `lookup_key` VARCHAR(255) NULL,
+  `storyitemscol` VARCHAR(45) NULL,
+  `item_content` TEXT(1000) NULL,
+  `created_at` DATETIME NULL DEFAULT NOW(),
+  `updated_at` DATETIME NULL DEFAULT NOW() ON UPDATE NOW(),
+  PRIMARY KEY (`idstoryitems`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `lancasters_schema`.`characters_has_storyitems`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `lancasters_schema`.`characters_has_storyitems` ;
+
+CREATE TABLE IF NOT EXISTS `lancasters_schema`.`characters_has_storyitems` (
+  `characters_idcharacters` INT NOT NULL,
+  `storyitems_idstoryitems` INT NOT NULL,
+  PRIMARY KEY (`characters_idcharacters`, `storyitems_idstoryitems`),
+  INDEX `fk_characters_has_storyitems_storyitems1_idx` (`storyitems_idstoryitems` ASC) VISIBLE,
+  INDEX `fk_characters_has_storyitems_characters_idx` (`characters_idcharacters` ASC) VISIBLE,
+  CONSTRAINT `fk_characters_has_storyitems_characters`
+    FOREIGN KEY (`characters_idcharacters`)
+    REFERENCES `lancasters_schema`.`characters` (`idcharacters`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_characters_has_storyitems_storyitems1`
+    FOREIGN KEY (`storyitems_idstoryitems`)
+    REFERENCES `lancasters_schema`.`storyitems` (`idstoryitems`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
