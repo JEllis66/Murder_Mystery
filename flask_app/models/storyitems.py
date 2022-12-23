@@ -77,7 +77,7 @@ class Story_Item:
     @classmethod
     def update(cls, data):
         query = """
-        UPDATE story_items SET title=%(title)s, network=%(network)s, release_date=%(release_date)s, description=%(description)s, updated_at=NOW() WHERE id = %(id)s
+        UPDATE story_items SET story_title=%(story_title)s, description=%(description)s, lookup_key=%(lookup_key)s, storyitemscol=%(storyitemscol)s, item_content=%(item_content)s,  updated_at=NOW() WHERE id = %(id)s
         ;"""
         return connectToMySQL(cls.db_name).query_db(query,data)
     
@@ -94,18 +94,21 @@ class Story_Item:
 
 
     @staticmethod
-    def validate_tv_show(tv_show):
+    def validate_story_item(story_item):
         is_valid = True
-        if len(tv_show['title']) < 2:
+        if len(story_item['story_title']) < 5:
             is_valid = False
-            flash("Title of show must be at least 2 characters","tv_show")
-        if len(tv_show['network']) < 2:
+            flash("Title of story must be at least 5 characters long","story_item")
+        if len(story_item['description']) < 8:
             is_valid = False
-            flash("Network name must be at least 2 characters","tv_show")
-        if tv_show['release_date'] == "":
+            flash("Description of the story item must be at least 8 characters long","story_item")
+        if len(story_item['lookup_key']) < 8 :
             is_valid = False
-            flash("Please enter a date","tv_show")
-        if len(tv_show['description']) < 3:
+            flash("Lookup keys should be at least 8 characters so they're not too easy to guess, you silly goose!","story_item")
+        if len(story_item['storyitemscol']) < 3:
             is_valid = False
-            flash("Description must be at least 3 characters","tv_show")
+            flash("Storyitemscol must be at least 3 characters in length","story_item")
+        if len(story_item['storyitemscol']) < 2:
+            is_valid = False
+            flash("Item Content column must be at least 2 characters in length","story_item")
         return is_valid
