@@ -7,7 +7,7 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index2.html')
 
 @app.route('/register',methods=['POST'])
 def register():
@@ -28,7 +28,7 @@ def register():
 
 @app.route('/login',methods=['POST'])
 def login():
-    character = Character.get_by_email(request.form)
+    character = Character.get_by_username(request.form)
 
     if not character or not bcrypt.check_password_hash(character.login_password, request.form['login_password']):
         flash("Login credentails do not match","login")
