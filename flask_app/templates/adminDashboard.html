@@ -20,32 +20,30 @@
                 </div>
                 
                 <div class="text-center">
-                    <img src="../static/images/aNightAtLancasters.png" class="img-fluid mb-3" alt="Lancaster Logo">
+                    <h1 class="text-danger my-4">Admin Dashboard:</h1>
                 </div>
 
-                <form action="/login" method="post">
-
-                    {% with messages = get_flashed_messages(category_filter=['login']) %}
-                        {% if messages %}
-                            <div class="alert alert-danger" role="alert">
-                                <strong><u>Entry Error:</u></strong>
-                                {% for message in messages %}
-                                    <p class="mt-2"> - {{message}}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    <div class="form-group">
-                        <label for="login_username" class="text-danger">Username</label>
-                        <input type="text" class="form-control" name="login_username" id="login_username" placeholder="Enter username">
+                <div class="d-flex justify-content-center my-2">
+                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
+                        <button class="btn btn-success"><a class="text-decoration-none text-white" href="/admin_character">Character Creation</a></button>
                     </div>
-                    <div class="form-group">
-                        <label for="login_password" class="text-danger">Password</label>
-                        <input type="password" class="form-control" name="login_password" id="login_password" placeholder="Enter password">
+                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
+                        <button class="btn btn-primary"><a class="text-decoration-none text-white" href="/admin_character_view">View Characters</a></button>
                     </div>
-                    <button type="submit" value="Enter" class="my-4 btn btn-danger btn-block">Login</button>
-                </form>
+                </div>
+                <div class="d-flex justify-content-center my-2">
+                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
+                        <button class="btn btn-success"><a class="text-decoration-none text-white" href="/admin_item">Story Item Creation</a></button>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
+                        <button class="btn btn-primary"><a class="text-decoration-none text-white" href="/admin_item_view">View Story Items</a></button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center my-2">
+                    <div class="text-center my-2 col-12">
+                        <button class="btn btn-secondary"><a class="text-decoration-none text-white" href="/">Back to User Login</a></button>
+                    </div>
+                </div>
 
             </div>
         </div>

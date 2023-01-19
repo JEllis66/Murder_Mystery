@@ -13,6 +13,7 @@ class Character:
         self.login_username = data['login_username']
         self.login_password = data['login_password']
         self.role = data['role']
+        self.character_name = data['login_username']
         self.relationship = data['relationship']
         self.potential_motive = data['potential_motive']
         self.created_at = data['created_at']
@@ -78,31 +79,33 @@ class Character:
 
             
     @staticmethod
-    def validate_register(user):
+    def validate_register(character):
         is_valid = True
         query = """
         SELECT * FROM characters WHERE login_username = %(login_username)s
         ;"""
-        results = connectToMySQL(User.db_name).query_db(query,user)
+        results = connectToMySQL(Character.db_name).query_db(query,character)
         if len(results) >= 1:
             flash("Username has already been used.","register")
             is_valid=False
-        # if not EMAIL_REGEX.match(user['email']):
+        # if not EMAIL_REGEX.match(character['email']):
         #     flash("Invalid Email!","register")
         #     is_valid=False
-        if len(user['login_username']) < 2:
+        if len(character['login_username']) < 2:
             flash("First name must be at least 2 characters","register")
             is_valid= False
-        if len(user['login_password']) < 3:
+        if len(character['login_password']) < 8:
             flash("Password must be at least 8 characters","register")
             is_valid= False
-        if len(user['role']) < 2:
+        if character['login_password'] != character['confirm_password']:
+            flash("'Password' and 'Confirm Password' must match","register")
+        if len(character['role']) < 2:
             flash("Role description must be at least 2 characters","register")
             is_valid= False
-        if len(user['relationship']) < 3:
-            flash("Role description must be at least 3 characters","register")
+        if len(character['relationship']) < 3:
+            flash("The character's relationship must be described with at least 3 characters, but probably more","register")
             is_valid= False
-        if len(user['potential_motive']) < 8:
+        if len(character['potential_motive']) < 8:
             flash("Potential Motive for Murder must be at least 8 characters","register")
             is_valid= False
         # if user['password'] != user['confirm']:

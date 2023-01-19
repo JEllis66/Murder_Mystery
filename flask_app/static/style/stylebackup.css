@@ -14,8 +14,8 @@
 .switch {
     position: relative;
     display: inline-block;
-    width: 66px;
-    height: 21px;
+    width: 52px;
+    height: 20px;
   }
 
   /* switch input */
@@ -43,10 +43,10 @@
   .switch label:before {
     position: absolute;
     content: "";
-    width: 22px;
-    height: 21px;
-    border-radius: 20px;
-    background-color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 16px;
+    background-color: #fff;
     top: 2px;
     left: 2px;
     bottom: 2px;
@@ -60,35 +60,7 @@
 
   /* switch input:checked + label:before */
   .switch input:checked + label:before {
-    transform: translateX(41px);
+    transform: translateX(28px);
   }
-
-
-
-
-
 
   
-  .custom-control-input:focus~.custom-control-label::before {
-    border-color: red !important;
-    box-shadow: 0 0 0 0.2rem rgba(255, 47, 69, 0.25) !important;
-  }
-  
-  .custom-control-input:checked~.custom-control-label::before {
-    border-color: red !important;
-    background-color: white !important;
-  }
-  
-  .custom-control-input:active~.custom-control-label::before {
-    background-color: red !important;
-    border-color:  white !important;
-  }
-  
-  .custom-control-input:focus:not(:checked)~.custom-control-label::before {
-    border-color: red !important;
-  }
-  
-  .custom-control-input-green:not(:disabled):active~.custom-control-label::before {
-    background-color: red !important;
-    border-color: red !important;
-  }

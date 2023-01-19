@@ -7,16 +7,45 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def index():
-    return render_template('index2.html')
+    return render_template('index.html')
+
+@app.route('/admin_dashboard')
+def admin():
+    return render_template('adminDashboard.html')
+
+@app.route('/admin_character')
+def character_creation():
+    return render_template('characterCreation.html')
+
+@app.route('/admin_character_refresh')
+def character_refresh():
+    session.pop('login_username', None)
+    session.pop('role', None)
+    session.pop('relationship', None)
+    session.pop('potential_motive', None)
+    return render_template('characterCreation.html')
+
+@app.route('/admin_item')
+def item_creation():
+    return render_template('storyItemCreation.html')
 
 @app.route('/register',methods=['POST'])
 def register():
 
     if not Character.validate_register(request.form):
-        return redirect('/')
+        if request.form["login_username"]:
+            session['login_username'] = request.form["login_username"]
+        if request.form["role"]:
+            session['role'] = request.form["role"]
+        if request.form["relationship"]:
+            session['relationship'] = request.form["relationship"]
+        if request.form['potential_motive']:
+            session['potential_motive'] = request.form["potential_motive"]
+        return redirect('/admin_character')
     data = { 
         "login_username": request.form['login_username'],
         "login_password": bcrypt.generate_password_hash(request.form['login_password']),
+        "character_name": request.form['login_username'],
         "role": request.form['role'],
         "relationship": request.form['relationship'],
         "potential_motive": request.form['potential_motiove'],
@@ -24,14 +53,17 @@ def register():
     id = Character.save(data)
     session['user_id'] = id
 
-    return redirect('/dashboard')
+    return redirect('/admin_dashboard')
 
 @app.route('/login',methods=['POST'])
 def login():
     character = Character.get_by_username(request.form)
 
+    if (request.form['login_username'] == "adminlogin"):
+        return redirect('/admin_dashboard')
+
     if not character or not bcrypt.check_password_hash(character.login_password, request.form['login_password']):
-        flash("Login credentails do not match","login")
+        flash("Login credentails do not match, please check your username spelling or retry entering your password","login")
         return redirect('/')
     session['user_id'] = character.id
     return redirect('/dashboard')
