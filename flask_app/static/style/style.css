@@ -10,23 +10,27 @@
     color: #1c1c1c;
 }
 
+#dark_p{
+    cursor: pointer;
+}
+
 /* switch styles */
 .switch {
     position: relative;
     display: inline-block;
     width: 66px;
     height: 21px;
-  }
+}
 
   /* switch input */
-  .switch input {
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
+}
 
   /* switch label */
-  .switch label {
+.switch label {
     position: absolute;
     top: 0;
     left: 0;
@@ -37,10 +41,10 @@
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
     cursor: pointer;
     transition: background-color 0.2s ease;
-  }
+}
 
   /* switch label:before */
-  .switch label:before {
+.switch label:before {
     position: absolute;
     content: "";
     width: 22px;
@@ -51,44 +55,38 @@
     left: 2px;
     bottom: 2px;
     transition: all 0.2s ease;
-  }
+}
 
   /* switch input:checked + label */
-  .switch input:checked + label {
+.switch input:checked + label {
     background-color: red;
-  }
+}
 
   /* switch input:checked + label:before */
-  .switch input:checked + label:before {
+.switch input:checked + label:before {
     transform: translateX(41px);
-  }
+}
 
-
-
-
-
-
-  
-  .custom-control-input:focus~.custom-control-label::before {
+.custom-control-input:focus~.custom-control-label::before {
     border-color: red !important;
     box-shadow: 0 0 0 0.2rem rgba(255, 47, 69, 0.25) !important;
-  }
-  
-  .custom-control-input:checked~.custom-control-label::before {
+}
+
+.custom-control-input:checked~.custom-control-label::before {
     border-color: red !important;
     background-color: white !important;
-  }
-  
-  .custom-control-input:active~.custom-control-label::before {
+}
+
+.custom-control-input:active~.custom-control-label::before {
     background-color: red !important;
     border-color:  white !important;
-  }
-  
-  .custom-control-input:focus:not(:checked)~.custom-control-label::before {
+}
+
+.custom-control-input:focus:not(:checked)~.custom-control-label::before {
     border-color: red !important;
-  }
-  
-  .custom-control-input-green:not(:disabled):active~.custom-control-label::before {
+}
+
+.custom-control-input-green:not(:disabled):active~.custom-control-label::before {
     background-color: red !important;
     border-color: red !important;
-  }
+}

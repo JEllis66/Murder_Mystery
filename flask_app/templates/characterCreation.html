@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Page</title>
+    <title>Character Creation</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="../static/style/style.css">
 </head>
@@ -11,11 +11,10 @@
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-md-6">
 
-                <p class="text-danger text-right mt-5 mb-1 small">Dark Mode</p>
+                <p id="dark_p" onclick=toggle() class="text-danger text-right mt-5 mb-1 small">Dark Mode</p>
                 <div class="mt-0 form-group text-right">
-                    <div class="custom-control switch">
-                        <input type="checkbox" class="custom-control-input switch" id="switch" name="switch" checked>
-                        <label class="form control custom-control-label text-danger" for="switch"></label>
+                    <div class="custom-control switch" id="switchDiv">
+                        <p id="switch"></p>
                     </div>
                 </div>
                 
@@ -83,7 +82,7 @@
                     </div>
 
                     <div class="d-flex justify-content-center align-items-center">
-                        <a href="/admin_dashboard" class="btn btn-link text-left text-danger text-decoration-none col-2 mr-3 border-danger">Cancel</a>
+                        <a href="/admin_dashboard" class="btn btn-link text-center text-danger text-decoration-none col-2 mr-3 border-danger">Cancel</a>
                         <button type="submit" value="Enter" class="my-4 btn btn-danger btn-block col-9">Submit Character</button>
                     </div>
                 </form>
@@ -93,7 +92,7 @@
     </div>
 
     <script>
-        const switchBtn = document.querySelector("#switch");
+        let switchBtn = document.querySelector("#switch");
         const body = document.querySelector("body");
         const html = document.querySelector("html");
 
@@ -108,6 +107,46 @@
                 html.classList.remove("dark-mode");
             }
         });
+
+        function toggle(){
+
+            let switchToggle
+
+            document.getElementById("switchDiv").innerHTML.length <= 65 ? 
+                switchToggle = true : 
+                switchToggle = false
+
+            if(switchToggle){
+
+                if(body.classList.contains("light-mode")){
+                    body.classList.remove("light-mode");
+                    body.classList.add("dark-mode");
+                    html.classList.add("dark-mode");
+                }
+                    
+                document.getElementById("switchDiv").innerHTML = 
+                `
+                    <input type="checkbox" class="custom-control-input switch" id="switch" name="switch" checked/>
+                    <label class="form control custom-control-label text-danger" for="switch"></label>
+                `
+            } else {
+                document.getElementById("switchDiv").innerHTML = `<p id="switch"></p>`
+            }
+
+            switchBtn = document.querySelector("#switch");
+
+            switchBtn.addEventListener("change", (event) => {
+                if(event.target.checked){
+                    body.classList.remove("light-mode");
+                    body.classList.add("dark-mode");
+                    html.classList.add("dark-mode");
+                } else {
+                    body.classList.remove("dark-mode");
+                    body.classList.add("light-mode");
+                    html.classList.remove("dark-mode");
+                }
+            });
+        }
 
         function clearForm(){
             document.getElementById("regForm").reset();

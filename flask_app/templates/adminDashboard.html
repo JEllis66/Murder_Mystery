@@ -11,11 +11,10 @@
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-md-6">
 
-                <p class="text-danger text-right mt-5 mb-1 small">Dark Mode</p>
+                <p id="dark_p" onclick=toggle() class="text-danger text-right mt-5 mb-1 small">Dark Mode</p>
                 <div class="mt-0 form-group text-right">
-                    <div class="custom-control switch">
-                        <input type="checkbox" class="custom-control-input switch" id="switch" name="switch" checked>
-                        <label class="form control custom-control-label text-danger" for="switch"></label>
+                    <div class="custom-control switch" id="switchDiv">
+                        <p id="switch"></p>
                     </div>
                 </div>
                 
@@ -24,20 +23,12 @@
                 </div>
 
                 <div class="d-flex justify-content-center my-2">
-                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
-                        <button class="btn btn-success"><a class="text-decoration-none text-white" href="/admin_character">Character Creation</a></button>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
-                        <button class="btn btn-primary"><a class="text-decoration-none text-white" href="/admin_character_view">View Characters</a></button>
-                    </div>
+                    <button class="col-5 btn btn-success my-2 mx-2"><a class="text-decoration-none text-white" href="/admin_character">Character Creation</a></button>
+                    <button class="col-5 btn btn-primary my-2 mx-2"><a class="text-decoration-none text-white" href="/admin_character_view">View Characters</a></button>
                 </div>
                 <div class="d-flex justify-content-center my-2">
-                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
-                        <button class="btn btn-success"><a class="text-decoration-none text-white" href="/admin_item">Story Item Creation</a></button>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 my-2">
-                        <button class="btn btn-primary"><a class="text-decoration-none text-white" href="/admin_item_view">View Story Items</a></button>
-                    </div>
+                    <button class="col-5 btn btn-success my-2 mx-2"><a class="text-decoration-none text-white" href="/admin_item">Story Item Creation</a></button>
+                    <button class="col-5 btn btn-primary my-2 mx-2"><a class="text-decoration-none text-white" href="/admin_item_view">View Story Items</a></button>
                 </div>
                 <div class="d-flex justify-content-center my-2">
                     <div class="text-center my-2 col-12">
@@ -50,7 +41,7 @@
     </div>
 
     <script>
-        const switchBtn = document.querySelector("#switch");
+        let switchBtn = document.querySelector("#switch");
         const body = document.querySelector("body");
         const html = document.querySelector("html");
 
@@ -65,6 +56,50 @@
                 html.classList.remove("dark-mode");
             }
         });
+
+        function toggle(){
+
+            let switchToggle
+
+            document.getElementById("switchDiv").innerHTML.length <= 65 ? 
+                switchToggle = true : 
+                switchToggle = false
+
+            if(switchToggle){
+
+                if(body.classList.contains("light-mode")){
+                    body.classList.remove("light-mode");
+                    body.classList.add("dark-mode");
+                    html.classList.add("dark-mode");
+                }
+                    
+                document.getElementById("switchDiv").innerHTML = 
+                `
+                    <input type="checkbox" class="custom-control-input switch" id="switch" name="switch" checked/>
+                    <label class="form control custom-control-label text-danger" for="switch"></label>
+                `
+            } else {
+                document.getElementById("switchDiv").innerHTML = `<p id="switch"></p>`
+            }
+
+            switchBtn = document.querySelector("#switch");
+
+            switchBtn.addEventListener("change", (event) => {
+                if(event.target.checked){
+                    body.classList.remove("light-mode");
+                    body.classList.add("dark-mode");
+                    html.classList.add("dark-mode");
+                } else {
+                    body.classList.remove("dark-mode");
+                    body.classList.add("light-mode");
+                    html.classList.remove("dark-mode");
+                }
+            });
+        }
+
+        function clearForm(){
+            document.getElementById("regForm").reset();
+        }
 
     </script>
 
