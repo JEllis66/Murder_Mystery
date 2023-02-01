@@ -11,7 +11,6 @@ class Story_Item:
         self.story_title = db_data['story_title']
         self.description = db_data['description']
         self.lookup_key = db_data['lookup_key']
-        self.storyitemscol = db_data['storyitemscol']
         self.item_content = db_data['item_content']
         self.created_at = db_data['created_at']
         self.updated_at = db_data['updated_at']
@@ -62,7 +61,6 @@ class Story_Item:
         #         'story_title' : story['story_title'],
         #         'description' : story['description'],
         #         'lookup_key' : story['lookup_key'],
-        #         'storyitemscol' : story['storyitemcol'],
         #         'item_content' : story['item_content'],
         #         'created_at' : story['created_at'],
         #         'updated_at' : story['updated_at'],
@@ -105,10 +103,7 @@ class Story_Item:
         if len(story_item['lookup_key']) < 8 :
             is_valid = False
             flash("Lookup keys should be at least 8 characters so they're not too easy to guess, you silly goose!","story_item")
-        if len(story_item['storyitemscol']) < 3:
+        if not story_item['item_content']:
             is_valid = False
-            flash("Storyitemscol must be at least 3 characters in length","story_item")
-        if len(story_item['storyitemscol']) < 2:
-            is_valid = False
-            flash("Item Content column must be at least 2 characters in length","story_item")
+            flash("You must include item content","story_item")
         return is_valid

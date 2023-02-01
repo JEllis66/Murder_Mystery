@@ -25,10 +25,6 @@ def character_refresh():
     session.pop('potential_motive', None)
     return render_template('characterCreation.html')
 
-@app.route('/admin_item')
-def item_creation():
-    return render_template('storyItemCreation.html')
-
 @app.route('/register',methods=['POST'])
 def register():
 

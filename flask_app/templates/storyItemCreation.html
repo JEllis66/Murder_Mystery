@@ -22,9 +22,9 @@
                     <h1 class="text-danger my-4">Story Creation:</h1>
                 </div>
 
-                <form id="storyForm" action="/story" method="post">
+                <form id="storyForm" action="/create/story_item" method="post">
 
-                    {% with messages = get_flashed_messages(category_filter=['story']) %}
+                    {% with messages = get_flashed_messages(category_filter=['story_item']) %}
                         {% if messages %}
                             <div class="alert alert-danger" role="alert">
                                 <strong><u>Entry Error:</u></strong>
@@ -38,44 +38,36 @@
                     <a href="/admin_story_refresh" class="d-flex justify-content-center btn btn-link text-center text-white small"> - Clear Form - </a>
 
                     <div class="form-group">
-                        <label for="story_item" class="text-danger">Story Title</label>
-                        {% if session['story_item'] %}
-                            <input value="{{session['story_item']}}" type="text" class="form-control" name="story_item" id="story_item" placeholder="Enter title...">
+                        <label for="story_title" class="text-danger">Story Title</label>
+                        {% if session['story_title'] %}
+                            <input value="{{session['story_title']}}" type="text" class="form-control" name="story_title" id="story_title" placeholder="Enter title...">
                         {% else %}
-                            <input type="text" class="form-control" name="story_item" id="story_item" placeholder="Enter title...">
+                            <input type="text" class="form-control" name="story_title" id="story_title" placeholder="Enter title...">
                         {% endif %}
                     </div>
                     <div class="form-group">
                         <label for="description" class="text-danger">Story Description</label>
                         {% if session['description'] %}
-                            <input value="{{session['description']}}" type="text" class="form-control" name="description" id="description" placeholder="Enter description...">
+                            <textarea value="{{session['description']}}" rows="3" class="form-control" name="description" id="description" placeholder="Enter description..."></textarea>
                         {% else %}
-                            <input type="text" class="form-control" name="description" id="description" placeholder="Enter description...">
+                            <textarea rows="3" class="form-control" name="description" id="description" placeholder="Enter description..."></textarea>
                         {% endif %}
                     </div>
-                    <div class="form-group">
-                        <label for="lookup_key" class="text-danger">Story Lookup Key</label>
-                        {% if session['lookup_key'] %}
-                            <input value="{{session['lookup_key']}}" type="text" class="form-control" name="lookup_key" id="lookup_key" placeholder="Enter story lookup key...">
-                        {% else %}
-                            <input type="text" class="form-control" name="lookup_key" id="lookup_key" placeholder="Enter story lookup key...">
-                        {% endif %}
+                    <div class="form-group mb-0">
+                        <label for="lookup_key" class="text-danger d-flex-inline justify-content-between">Story Lookup-Key</label>
+                        <div class="ml-1 row justify-content-start">
+                            {% if session['lookup_key'] %}
+                                <input value="{{session['lookup_key']}}" type="text" class="form-control col-10" name="lookup_key" id="lookup_key" placeholder="Create or generate lookup-key...">
+                                <p class="col-2" id="refresh-text" style="line-height: 2.3em;">🔄</p>
+                            {% else %}
+                                <input type="text" class="form-control col-10" name="lookup_key" id="lookup_key" placeholder="Create or generate lookup-key...">
+                                <p class="col-2" id="refresh-text" style="line-height: 2.3em;">🔄</p>
+                            {% endif %}
+                        </div>    
                     </div>
                     <div class="form-group">
-                        <label for="relationship" class="text-danger">Character's Relationship</label>
-                        {% if session['relationship'] %}
-                            <input value="{{session['relationship']}}" type="text" class="form-control" name="relationship" id="relationship" placeholder="Enter relationship...">
-                        {% else %}
-                            <input type="text" class="form-control" name="relationship" id="relationship" placeholder="Enter relationship...">
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="potential_motive" class="text-danger">Potential Motive</label>
-                        {% if session['potential_motive'] %}
-                            <input value="{{session['potential_motive']}}" type="textarea" rows="3" resize="vertical" class="form-control" name="potential_motive" id="potential_motive" placeholder="Why murder?">
-                        {% else %}
-                            <input type="textarea" rows="3" resize="vertical" class="form-control" name="potential_motive" id="potential_motive" placeholder="Why murder?">
-                        {% endif %}
+                        <label for="item_content" class="text-danger">Item Content</label>
+                        <input type="text" class="form-control" name="item_content" id="item_content" placeholder="Enter item content...">
                     </div>
 
                     <div class="d-flex justify-content-center align-items-center">
@@ -148,6 +140,37 @@
         function clearForm(){
             document.getElementById("regForm").reset();
         }
+
+        const apiKey = `{{ apiKey }}`
+        
+        window.onload = function() {
+            document.getElementById("refresh-text").addEventListener("click", function(){
+                    fetch("https://api.random.org/json-rpc/1/invoke", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            method: "generateStrings",
+                            params: {
+                                apiKey: apiKey,
+                                n: 1,
+                                length: 8,
+                                characters: "abcdefghjklmnprtuvwyABCDEFGHJKLMNPRTUVWY123456789",
+                                replacement: true
+                            },
+                            id: 42                  
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.result.random.data[0]);
+                            document.getElementById('lookup_key').value = data.result.random.data[0].toUpperCase()
+                    });
+            });
+        }
+        
 
     </script>
 

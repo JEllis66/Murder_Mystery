@@ -90,3 +90,12 @@
     background-color: red !important;
     border-color: red !important;
 }
+
+p[id="refresh-text"] {
+    cursor: pointer;
+}
+
+textarea {
+    resize: vertical;
+    overflow: auto;
+}
