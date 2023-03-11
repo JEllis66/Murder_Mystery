@@ -9,7 +9,7 @@ from flask_app.models import storyitems
 class Character:
     db_name = "lancasters_schema"
     def __init__(self,data):
-        self.id = data['id']
+        self.idcharacters = data['idcharacters']
         self.login_username = data['login_username']
         self.login_password = data['login_password']
         self.role = data['role']
@@ -20,10 +20,28 @@ class Character:
         self.updated_at = data['updated_at']
 
 #CREATE
+
     @classmethod
     def save(cls,data):
-        query = "INSERT INTO characters (login_username,login_password,role,relationship,potential_motive) VALUES(%(login_username)s,%(login_password)s,%(role)s,%(relationship)s,%(potential_motive)s)"
+        query = """
+        INSERT INTO characters (login_username,login_password,role,relationship,potential_motive) 
+        VALUES(%(login_username)s,%(login_password)s,%(role)s,%(relationship)s,%(potential_motive)s)
+        ;"""
         return connectToMySQL(cls.db_name).query_db(query,data)
+
+    @classmethod
+    def update(cls,data):
+        query = """
+        UPDATE characters SET
+            login_username = %(login_username)s,
+            role = %(role)s,
+            relationship = %(relationship)s,
+            potential_motive = %(potential_motive)s
+        WHERE idcharacters = %(idcharacters)s
+        ;"""
+        return connectToMySQL(cls.db_name).query_db(query,data)
+    
+    
 
 #READ
     @classmethod
@@ -52,7 +70,11 @@ class Character:
 
     @classmethod
     def get_by_id(cls,data):
-        query = "SELECT * FROM characters WHERE id = %(id)s;"
+        query = """
+        SELECT * 
+        FROM characters 
+        WHERE idcharacters = %(id)s
+        ;"""
         results = connectToMySQL(cls.db_name).query_db(query,data)
         return cls(results[0])
 
@@ -77,6 +99,19 @@ class Character:
         #     this_user.shows.append(tv_show.Tv_show(show))
         # return this_user
 
+
+#UPDATE
+    @classmethod
+    def update(cls,data):
+        query = """
+        UPDATE characters SET
+            login_username = %(login_username)s,
+            role = %(role)s,
+            relationship = %(relationship)s,
+            potential_motive = %(potential_motive)s
+        WHERE idcharacters = %(idcharacters)s
+        ;"""
+        return connectToMySQL(cls.db_name).query_db(query,data)
             
     @staticmethod
     def validate_register(character):
@@ -92,7 +127,7 @@ class Character:
         #     flash("Invalid Email!","register")
         #     is_valid=False
         if len(character['login_username']) < 2:
-            flash("First name must be at least 2 characters","register")
+            flash("Username must be at least 2 characters","register")
             is_valid= False
         if len(character['login_password']) < 8:
             flash("Password must be at least 8 characters","register")
@@ -110,4 +145,28 @@ class Character:
             is_valid= False
         # if user['password'] != user['confirm']:
         #     flash("Passwords must match","register")
+        return is_valid
+    
+    @staticmethod
+    def validate_edits(character):
+        is_valid = True
+        query = """
+        SELECT * FROM characters WHERE login_username = %(login_username)s
+        ;"""
+        results = connectToMySQL(Character.db_name).query_db(query,character)
+        # if not EMAIL_REGEX.match(character['email']):
+        #     flash("Invalid Email!","updateForm")
+        #     is_valid=False
+        if len(character['login_username']) < 2:
+            flash("Username must be at least 2 characters","updateForm")
+            is_valid= False
+        if len(character['role']) < 2:
+            flash("Role description must be at least 2 characters","updateForm")
+            is_valid= False
+        if len(character['relationship']) < 3:
+            flash("The character's relationship must be described with at least 3 characters, but probably more","updateForm")
+            is_valid= False
+        if len(character['potential_motive']) < 8:
+            flash("Potential Motive for Murder must be at least 8 characters","updateForm")
+            is_valid= False
         return is_valid

@@ -9,6 +9,8 @@ bcrypt = Bcrypt(app)
 def index():
     return render_template('index.html')
 
+
+###### ADMIN ROUTES
 @app.route('/admin_dashboard')
 def admin():
     return render_template('adminDashboard.html')
@@ -24,6 +26,20 @@ def character_refresh():
     session.pop('relationship', None)
     session.pop('potential_motive', None)
     return render_template('characterCreation.html')
+
+@app.route('/admin_character_view')
+def view_characters():
+    data = {
+        "id" : id
+    }
+    return render_template("characterView.html",character=Character.get_all())
+
+@app.route('/admin_character_edit/<int:id>')
+def edit_character(id):
+    data = {
+        "id" : id
+    }
+    return render_template("characterEdit.html",character=Character.get_by_id(data))
 
 @app.route('/register',methods=['POST'])
 def register():
@@ -44,12 +60,54 @@ def register():
         "character_name": request.form['login_username'],
         "role": request.form['role'],
         "relationship": request.form['relationship'],
-        "potential_motive": request.form['potential_motiove'],
+        "potential_motive": request.form['potential_motive'],
     }
     id = Character.save(data)
     session['user_id'] = id
 
     return redirect('/admin_dashboard')
+
+@app.route('/update/<int:idchar>',methods=['POST'])
+def update_character(idchar):
+
+    if not Character.validate_edits(request.form):
+        if request.form["login_username"]:
+            session['login_username'] = request.form["login_username"]
+        if request.form["role"]:
+            session['role'] = request.form["role"]
+        if request.form["relationship"]:
+            session['relationship'] = request.form["relationship"]
+        if request.form['potential_motive']:
+            session['potential_motive'] = request.form["potential_motive"]
+        return redirect('/admin_character_edit/'+str(idchar))
+    data = { 
+        "idcharacters": idchar,
+        "login_username": request.form['login_username'],
+        "role": request.form['role'],
+        "relationship": request.form['relationship'],
+        "potential_motive": request.form['potential_motive'],
+    }
+    id = Character.update(data)
+    session['user_id'] = id
+
+    return redirect('/admin_character_view')
+
+@app.route('/destroy_all')
+def go_nuclear():
+    Character.nuke()
+    return redirect('/admin_character_view')
+
+
+@app.route('destroy/<int:id>')
+def delete_one(id):
+    data = {
+        "idcharacters": id
+    }
+    Character.destroy(data)
+    return redirect('/admin_character_view')
+
+###### ADMIN ROUTES
+
 
 @app.route('/login',methods=['POST'])
 def login():
@@ -71,7 +129,7 @@ def dashboard():
     data ={
         'id': session['character_id']
     }
-    return render_template("dashboard.html",user=Character.get_by_id(data),storyitems=Story_Items.get_all()) #<--- insert default loaded storyitmes here to input into dashboard upon page load
+    return render_template("dashboard.html",user=Character.get_by_id(data),storyitems=Story_Item.get_all()) #<--- insert default loaded storyitmes here to input into dashboard upon page load
 
 @app.route('/logout')
 def logout():
