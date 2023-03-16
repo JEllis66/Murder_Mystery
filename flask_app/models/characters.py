@@ -64,7 +64,7 @@ class Character:
         WHERE login_username = %(login_username)s
         ;"""
         results = connectToMySQL(cls.db_name).query_db(query,data)
-        if len(results) < 1:
+        if not results:
             return False
         return cls(results[0])
 
@@ -104,20 +104,40 @@ class Character:
     @classmethod
     def update(cls,data):
         query = """
-        UPDATE characters SET
-            login_username = %(login_username)s,
-            role = %(role)s,
-            relationship = %(relationship)s,
-            potential_motive = %(potential_motive)s
-        WHERE idcharacters = %(idcharacters)s
+            UPDATE characters SET
+                login_username = %(login_username)s,
+                role = %(role)s,
+                relationship = %(relationship)s,
+                potential_motive = %(potential_motive)s
+            WHERE idcharacters = %(idcharacters)s
         ;"""
         return connectToMySQL(cls.db_name).query_db(query,data)
+    
+#DELETE
+
+    @classmethod
+    def delete_one(cls,data):
+        query = """
+            DELETE FROM characters
+            WHERE idcharacters = %(idcharacters)s
+        ;"""
+        return connectToMySQL(cls.db_name).query_db(query,data)
+
+    @classmethod
+    def nuke(cls):
+        query = """
+            DELETE * FROM characters
+        ;"""
+        return connectToMySQL(cls.db_name).query_db(query)
+
+
+#STATIC_METHODS
             
     @staticmethod
     def validate_register(character):
         is_valid = True
         query = """
-        SELECT * FROM characters WHERE login_username = %(login_username)s
+            SELECT * FROM characters WHERE login_username = %(login_username)s
         ;"""
         results = connectToMySQL(Character.db_name).query_db(query,character)
         if len(results) >= 1:

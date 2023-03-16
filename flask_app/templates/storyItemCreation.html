@@ -22,7 +22,7 @@
                     <h1 class="text-danger my-4">Story Creation:</h1>
                 </div>
 
-                <form id="storyForm" action="/create/story_item" method="post">
+                <form id="storyForm" action="/register_story_item" method="post">
 
                     {% with messages = get_flashed_messages(category_filter=['story_item']) %}
                         {% if messages %}
@@ -35,7 +35,7 @@
                         {% endif %}
                     {% endwith %}
 
-                    <a href="/admin_story_refresh" class="d-flex justify-content-center btn btn-link text-center text-primary] small"> - Clear Form - </a>
+                    <a href="/admin_story_alt" class="d-flex justify-content-center btn btn-link text-center text-primary] small"> - Clear Form - </a>
 
                     <div class="form-group">
                         <label for="story_title" class="text-danger">Story Title</label>

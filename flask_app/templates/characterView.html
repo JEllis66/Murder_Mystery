@@ -9,13 +9,6 @@
 <body>
     <div class="container-fluid h-100">
 
-        <p id="dark_p" onclick=toggle() class="text-danger text-right mt-5 mb-1 small">Dark Mode</p>
-        <div class="mt-0 form-group text-right">
-            <div class="custom-control switch" id="switchDiv">
-                <p id="switch"></p>
-            </div>
-        </div>
-
         <div class="text-center">
             <h1 class="text-danger my-4">Character List:</h1>
         </div>
@@ -59,67 +52,11 @@
 
         </table>
         <div class="text-center">
-            <a href="/admin_character"><button class="btn btn-secondary">+ Add Characters</button></a>
+            <a class="mr-2" href="/admin_dashboard"><button class="btn btn-danger">← Back</button></a>
+            <a class="ml-2" href="/admin_character_alt"><button class="btn btn-secondary">+ Add Characters</button></a>
         </div>
     </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js" integrity="sha512-RPX4FK8D7gh9zv6S1+E2EzR19zZi2aTlTlA7EAE/QOVVK0i7WpXvSDsUIHtbAvlyYf1UDZbTjTmNgidE7nCmFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-    let switchBtn = document.querySelector("#switch");
-        const body = document.querySelector("body");
-        const html = document.querySelector("html");
 
-        switchBtn.addEventListener("change", (event) => {
-            if(event.target.checked){
-                body.classList.remove("light-mode");
-                body.classList.add("dark-mode");
-                html.classList.add("dark-mode");
-            } else {
-                body.classList.remove("dark-mode");
-                body.classList.add("light-mode");
-                html.classList.remove("dark-mode");
-            }
-        });
-
-        function toggle(){
-
-            let switchToggle
-
-            document.getElementById("switchDiv").innerHTML.length <= 65 ? 
-                switchToggle = true : 
-                switchToggle = false
-
-            if(switchToggle){
-
-                if(body.classList.contains("light-mode")){
-                    body.classList.remove("light-mode");
-                    body.classList.add("dark-mode");
-                    html.classList.add("dark-mode");
-                }
-                    
-                document.getElementById("switchDiv").innerHTML = 
-                `
-                    <input type="checkbox" class="custom-control-input switch" id="switch" name="switch" checked/>
-                    <label class="form control custom-control-label text-danger" for="switch"></label>
-                `
-            } else {
-                document.getElementById("switchDiv").innerHTML = `<p id="switch"></p>`
-            }
-
-            switchBtn = document.querySelector("#switch");
-
-            switchBtn.addEventListener("change", (event) => {
-                if(event.target.checked){
-                    body.classList.remove("light-mode");
-                    body.classList.add("dark-mode");
-                    html.classList.add("dark-mode");
-                } else {
-                    body.classList.remove("dark-mode");
-                    body.classList.add("light-mode");
-                    html.classList.remove("dark-mode");
-                }
-            });
-        }
-
-</script>
 </body>
 </html>

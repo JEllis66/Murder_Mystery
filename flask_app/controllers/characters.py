@@ -5,45 +5,59 @@ from flask_app.models.storyitems import Story_Item
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
+#GENERAL ROUTES
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
-###### ADMIN ROUTES
 @app.route('/admin_dashboard')
 def admin():
     return render_template('adminDashboard.html')
+
+@app.route('/login',methods=['POST'])
+def login():
+    if (request.form['login_username'] == "adminlogin"):
+        return redirect('/admin_dashboard')
+    
+    character = Character.get_by_username(request.form)
+
+    if not character or not bcrypt.check_password_hash(character.login_password, request.form['login_password']):
+        flash("Login credentails do not match, please check your username spelling or retry entering your password","login")
+        return redirect('/')
+    session['character_id'] = character.idcharacters
+    return redirect('/dashboard')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'character_id' not in session:
+        return redirect('/logout')
+    data ={
+        'id': session['character_id']
+    }
+    return render_template("dashboard.html",user=Character.get_by_id(data)) #<--- insert default loaded storyitmes here to input into dashboard upon page load
+
+#CREATE
 
 @app.route('/admin_character')
 def character_creation():
     return render_template('characterCreation.html')
 
-@app.route('/admin_character_refresh')
-def character_refresh():
+@app.route('/admin_character_alt')
+def character_creation_alt():
     session.pop('login_username', None)
     session.pop('role', None)
     session.pop('relationship', None)
     session.pop('potential_motive', None)
     return render_template('characterCreation.html')
 
-@app.route('/admin_character_view')
-def view_characters():
-    data = {
-        "id" : id
-    }
-    return render_template("characterView.html",character=Character.get_all())
-
-@app.route('/admin_character_edit/<int:id>')
-def edit_character(id):
-    data = {
-        "id" : id
-    }
-    return render_template("characterEdit.html",character=Character.get_by_id(data))
-
-@app.route('/register',methods=['POST'])
+@app.route('/register_character',methods=['POST'])
 def register():
-
     if not Character.validate_register(request.form):
         if request.form["login_username"]:
             session['login_username'] = request.form["login_username"]
@@ -65,11 +79,25 @@ def register():
     id = Character.save(data)
     session['user_id'] = id
 
-    return redirect('/admin_dashboard')
+    return redirect('/admin_character_view')
+
+#READ
+
+@app.route('/admin_character_view')
+def view_characters():
+    return render_template("characterView.html",character=Character.get_all())
+
+#UPDATE
+
+@app.route('/admin_character_edit/<int:id>')
+def edit_character(id):
+    data = {
+        "id" : id
+    }
+    return render_template("characterEdit.html",character=Character.get_by_id(data))
 
 @app.route('/update/<int:idchar>',methods=['POST'])
 def update_character(idchar):
-
     if not Character.validate_edits(request.form):
         if request.form["login_username"]:
             session['login_username'] = request.form["login_username"]
@@ -87,51 +115,21 @@ def update_character(idchar):
         "relationship": request.form['relationship'],
         "potential_motive": request.form['potential_motive'],
     }
-    id = Character.update(data)
-    session['user_id'] = id
-
+    Character.update(data)
     return redirect('/admin_character_view')
 
-@app.route('/destroy_all')
+#DELETE
+
+@app.route('/admin_character_clear')
 def go_nuclear():
     Character.nuke()
     return redirect('/admin_character_view')
 
 
-@app.route('destroy/<int:id>')
-def delete_one(id):
+@app.route('/admin_character_delete/<int:idchar>')
+def delete_one(idchar):
     data = {
-        "idcharacters": id
+        "idcharacters": idchar
     }
-    Character.destroy(data)
+    Character.delete_one(data)
     return redirect('/admin_character_view')
-
-###### ADMIN ROUTES
-
-
-@app.route('/login',methods=['POST'])
-def login():
-    character = Character.get_by_username(request.form)
-
-    if (request.form['login_username'] == "adminlogin"):
-        return redirect('/admin_dashboard')
-
-    if not character or not bcrypt.check_password_hash(character.login_password, request.form['login_password']):
-        flash("Login credentails do not match, please check your username spelling or retry entering your password","login")
-        return redirect('/')
-    session['user_id'] = character.id
-    return redirect('/dashboard')
-
-@app.route('/dashboard')
-def dashboard():
-    if 'character_id' not in session:
-        return redirect('/logout')
-    data ={
-        'id': session['character_id']
-    }
-    return render_template("dashboard.html",user=Character.get_by_id(data),storyitems=Story_Item.get_all()) #<--- insert default loaded storyitmes here to input into dashboard upon page load
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect('/')
