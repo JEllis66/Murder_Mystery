@@ -4,7 +4,7 @@ import re	# the regex module
 # create a regular expression object that we'll use later   
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 from flask import flash
-from flask_app.models import storyitems
+from flask_app.models import storyitems, characters
 
 class Character:
     db_name = "lancasters_schema"
@@ -28,19 +28,6 @@ class Character:
         VALUES(%(login_username)s,%(login_password)s,%(role)s,%(relationship)s,%(potential_motive)s)
         ;"""
         return connectToMySQL(cls.db_name).query_db(query,data)
-
-    @classmethod
-    def update(cls,data):
-        query = """
-        UPDATE characters SET
-            login_username = %(login_username)s,
-            role = %(role)s,
-            relationship = %(relationship)s,
-            potential_motive = %(potential_motive)s
-        WHERE idcharacters = %(idcharacters)s
-        ;"""
-        return connectToMySQL(cls.db_name).query_db(query,data)
-    
     
 
 #READ
@@ -72,8 +59,8 @@ class Character:
     def get_by_id(cls,data):
         query = """
         SELECT * 
-        FROM characters 
-        WHERE idcharacters = %(id)s
+            FROM characters 
+            WHERE idcharacters = %(idcharacters)s
         ;"""
         results = connectToMySQL(cls.db_name).query_db(query,data)
         return cls(results[0])
@@ -113,13 +100,14 @@ class Character:
         ;"""
         return connectToMySQL(cls.db_name).query_db(query,data)
     
+
 #DELETE
 
     @classmethod
     def delete_one(cls,data):
         query = """
             DELETE FROM characters
-            WHERE idcharacters = %(idcharacters)s
+            WHERE idcharacters = %(id)s
         ;"""
         return connectToMySQL(cls.db_name).query_db(query,data)
 
@@ -171,7 +159,7 @@ class Character:
     def validate_edits(character):
         is_valid = True
         query = """
-        SELECT * FROM characters WHERE login_username = %(login_username)s
+            SELECT * FROM characters WHERE login_username = %(login_username)s
         ;"""
         results = connectToMySQL(Character.db_name).query_db(query,character)
         # if not EMAIL_REGEX.match(character['email']):

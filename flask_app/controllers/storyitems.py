@@ -6,12 +6,12 @@ from flask_app.models.characters import Character
 
 #CREATE
 
-@app.route('/admin_item')
+@app.route('/admin_storyitem')
 def item_creation():
     myApiKey = "1218e00a-76a4-4c26-a211-487c4d8e041d"
     return render_template('storyItemCreation.html',apiKey = myApiKey)
 
-@app.route('/admin_story_alt')
+@app.route('/admin_storyitem_alt')
 def story_refresh():
     myApiKey = "1218e00a-76a4-4c26-a211-487c4d8e041d"
     session.pop('story_title', None)
@@ -21,9 +21,9 @@ def story_refresh():
     return render_template('storyItemCreation.html',apiKey = myApiKey)
 
 @app.route('/register_story_item',methods=['POST'])
-def create_story_item():
+def create_storyitem():
     myApiKey = "1218e00a-76a4-4c26-a211-487c4d8e041d"
-    if not Story_Item.validate_story_item(request.form):
+    if not Story_Item.validate_storyitem(request.form):
         if request.form["story_title"]:
             session['story_title'] = request.form["story_title"]
         if request.form["description"]:
@@ -38,20 +38,20 @@ def create_story_item():
         "item_content": request.form["item_content"]
     }
     Story_Item.save(data)
-    return redirect('/dashboard')
+    return redirect('/admin_storyitem_view')
 
 #READ
 
-@app.route('/story_item_view')
-def view_story_items():
-    return render_template("storyItemView.html",story_item=Story_Item.get_all())
+@app.route('/admin_storyitem_view')
+def view_storyitems():
+    return render_template("storyItemView.html",storyitem=Story_Item.get_all_storyitems())
 
-@app.route('/admin_story_item_view/<int:id>')
-def view_story_item(id):
+@app.route('/admin_storyitem_view/<int:idstoryitems>')
+def view_storyitem(idstoryitems):
     data = {
-        "id" : id
+        "idstoryitems" : idstoryitems
     }
-    return render_template("characterEdit.html",story_item=Story_Item.get_by_id(data))
+    return render_template("storyItemEdit.html",storyitem=Story_Item.get_storyitem_by_id(data))
 
 #good starting place for viewing a character's list of their specific item(s)/story(ies)
 # @app.route('/story_item/<int:id>')
@@ -66,16 +66,16 @@ def view_story_item(id):
 
 
 #UPDATE
-@app.route('/admin_story_item_edit/<int:id>')
-def edit_story_item(id):
+@app.route('/admin_storyitem_edit/<int:idstoryitems>')
+def edit_storyitem(idstoryitems):
     data = {
-        "id":id
+        "idstoryitems":idstoryitems
     }
-    return render_template("edit_story_item.html",edit=Story_Item.get_by_id(data))
+    return render_template("storyItemEdit.html",storyitem=Story_Item.get_storyitem_by_id(data))
 
 @app.route('/update/<int:idstor>',methods=['POST'])
-def update_story_item(idstor):
-    if not Character.validate_story_item_edits(request.form):
+def update_storyitem(idstor):
+    if not Story_Item.validate_storyitem_edits(request.form):
         if request.form["story_title"]:
                 session['story_title'] = request.form["story_title"]
         if request.form["description"]:
@@ -86,25 +86,26 @@ def update_story_item(idstor):
             session['item_content'] = request.form["item_content"]
         return redirect('/admin_story_item_edit/'+str(idstor))
     data = {
+        "idstoryitems": idstor,
         "story_title": request.form["story_title"],
         "description": request.form["description"],
         "lookup_key": request.form["lookup_key"],
         "item_content": request.form["item_content"]
     }
-    Story_Item.update(data)
-    return redirect('/admin_stroy_item_view')
+    Story_Item.update_si(data)
+    return redirect('/admin_storyitem_view')
 
 #DELETE
-@app.route('/admin_character_clear')
+@app.route('/admin_storyitem_clear')
 def go_postal():
-    Character.post()
-    return redirect('/admin_character_view')
+    Story_Item.post()
+    return redirect('/admin_storyitem_view')
 
 
-@app.route('/admin_character_delete/<int:idchar>')
-def delete_one_story_item(idstor):
+@app.route('/admin_storyitem_delete/<int:idstor>')
+def delete_one_storyitem(idstor):
     data = {
         "idstoryitems": idstor
     }
-    Character.delete_one_story_item(data)
-    return redirect('/admin_stroy_item_view')
+    Story_Item.delete_one_si(data)
+    return redirect('/admin_storyitem_view')

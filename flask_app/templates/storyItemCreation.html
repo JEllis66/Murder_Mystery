@@ -10,21 +10,14 @@
     <div class="container-fluid h-100">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-md-6">
-
-                <p id="dark_p" onclick=toggle() class="text-danger text-right mt-5 mb-1 small">Dark Mode</p>
-                <div class="mt-0 form-group text-right">
-                    <div class="custom-control switch" id="switchDiv">
-                        <p id="switch"></p>
-                    </div>
-                </div>
                 
                 <div class="text-center">
-                    <h1 class="text-danger my-4">Story Creation:</h1>
+                    <h1 class="text-danger my-4">Story/Item Creation:</h1>
                 </div>
 
                 <form id="storyForm" action="/register_story_item" method="post">
 
-                    {% with messages = get_flashed_messages(category_filter=['story_item']) %}
+                    {% with messages = get_flashed_messages(category_filter=['storyitem']) %}
                         {% if messages %}
                             <div class="alert alert-danger" role="alert">
                                 <strong><u>Entry Error:</u></strong>
@@ -35,10 +28,10 @@
                         {% endif %}
                     {% endwith %}
 
-                    <a href="/admin_story_alt" class="d-flex justify-content-center btn btn-link text-center text-primary] small"> - Clear Form - </a>
+                    <a href="/admin_storyitem_alt" class="d-flex justify-content-center btn btn-link text-center text-primary] small"> - Clear Form - </a>
 
                     <div class="form-group">
-                        <label for="story_title" class="text-danger">Story Title</label>
+                        <label for="story_title" class="text-danger">Title</label>
                         {% if session['story_title'] %}
                             <input value="{{session['story_title']}}" type="text" class="form-control" name="story_title" id="story_title" placeholder="Enter title...">
                         {% else %}
@@ -46,7 +39,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="description" class="text-danger">Story Description</label>
+                        <label for="description" class="text-danger">Description</label>
                         {% if session['description'] %}
                             <textarea value="{{session['description']}}" rows="3" class="form-control" name="description" id="description" placeholder="Enter description..."></textarea>
                         {% else %}
@@ -54,7 +47,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group mb-0">
-                        <label for="lookup_key" class="text-danger d-flex-inline justify-content-between">Story Lookup-Key</label>
+                        <label for="lookup_key" class="text-danger d-flex-inline justify-content-between">Lookup-Key</label>
                         <div class="ml-1 row justify-content-start">
                             {% if session['lookup_key'] %}
                                 <input value="{{session['lookup_key']}}" type="text" class="form-control col-10" name="lookup_key" id="lookup_key" placeholder="Create or generate lookup-key...">
@@ -72,7 +65,7 @@
 
                     <div class="d-flex justify-content-center align-items-center">
                         <a href="/admin_dashboard" class="btn btn-link text-center text-danger text-decoration-none col-2 mr-3 border-danger">Cancel</a>
-                        <button type="submit" value="Enter" class="my-4 btn btn-danger btn-block col-9">Submit Story</button>
+                        <button type="submit" value="Enter" class="my-4 btn btn-danger btn-block col-9">Submit Story/Item</button>
                     </div>
                 </form>
 
@@ -81,64 +74,8 @@
     </div>
 
     <script>
-        let switchBtn = document.querySelector("#switch");
-        const body = document.querySelector("body");
-        const html = document.querySelector("html");
-
-        switchBtn.addEventListener("change", (event) => {
-            if(event.target.checked){
-                body.classList.remove("light-mode");
-                body.classList.add("dark-mode");
-                html.classList.add("dark-mode");
-            } else {
-                body.classList.remove("dark-mode");
-                body.classList.add("light-mode");
-                html.classList.remove("dark-mode");
-            }
-        });
-
-        function toggle(){
-
-            let switchToggle
-
-            document.getElementById("switchDiv").innerHTML.length <= 65 ? 
-                switchToggle = true : 
-                switchToggle = false
-
-            if(switchToggle){
-
-                if(body.classList.contains("light-mode")){
-                    body.classList.remove("light-mode");
-                    body.classList.add("dark-mode");
-                    html.classList.add("dark-mode");
-                }
-                    
-                document.getElementById("switchDiv").innerHTML = 
-                `
-                    <input type="checkbox" class="custom-control-input switch" id="switch" name="switch" checked/>
-                    <label class="form control custom-control-label text-danger" for="switch"></label>
-                `
-            } else {
-                document.getElementById("switchDiv").innerHTML = `<p id="switch"></p>`
-            }
-
-            switchBtn = document.querySelector("#switch");
-
-            switchBtn.addEventListener("change", (event) => {
-                if(event.target.checked){
-                    body.classList.remove("light-mode");
-                    body.classList.add("dark-mode");
-                    html.classList.add("dark-mode");
-                } else {
-                    body.classList.remove("dark-mode");
-                    body.classList.add("light-mode");
-                    html.classList.remove("dark-mode");
-                }
-            });
-        }
-
         function clearForm(){
-            document.getElementById("regForm").reset();
+            document.getElementById("storyForm").reset();
         }
 
         const apiKey = `{{ apiKey }}`
@@ -170,8 +107,6 @@
                     });
             });
         }
-        
-
     </script>
 
 </body>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Story/Items View</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style/style.css">
+</head>
+<body class="dark-mode">
+<body>
+    <div class="container-fluid h-100">
+
+        <div class="text-center">
+            <h1 class="text-danger my-4">Story Items List:</h1>
+        </div>
+
+        <div>
+            <a href="/admin_character_clear" class="d-flex justify-content-center btn btn-link text-center text-warning small"> - Delete All - </a>
+        </div>
+
+        <table class="table table-striped table-bordered dark-mode mt-2">
+            <thead>
+                <tr>
+                    <th>ID:</th>
+                    <th>Title:</th>
+                    <th>Description:</th>
+                    <th>Look-up Key:</th>
+                    <th>Content:</th>
+                    <!-- <th>Time Created:</th>
+                    <th>Last Updated:</th> -->
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for storyitem in storyitem %}
+                    <tr>
+                        <td>{{storyitem.idstoryitems}}</td>
+                        <td>{{storyitem.story_title}}</td>
+                        <td>{{storyitem.description}}</td>
+                        <td>{{storyitem.lookup_key}}</td>
+                        <td>{{storyitem.item_content}}</td>
+                        <th class="d-flex justify-content-around">
+                            <a href="/admin_storyitem_edit/{{storyitem.idstoryitems}}"><button class="btn btn-success">Edit</button></a>
+                            <a href="/admin_storyitem_delete/{{storyitem.idstoryitems}}"><button class="btn btn-danger">Remove</button></a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                
+            </tbody>
+
+        </table>
+        <div class="text-center">
+            <a class="mr-2" href="/admin_dashboard"><button class="btn btn-danger">← Back</button></a>
+            <a class="ml-2" href="/admin_storyitem_alt"><button class="btn btn-secondary">+ Add Story/Item</button></a>
+        </div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js" integrity="sha512-RPX4FK8D7gh9zv6S1+E2EzR19zZi2aTlTlA7EAE/QOVVK0i7WpXvSDsUIHtbAvlyYf1UDZbTjTmNgidE7nCmFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</body>
+</html>

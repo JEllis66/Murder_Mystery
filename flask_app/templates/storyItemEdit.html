@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Story Item Edit</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style/style.css">
+</head>
+<body class="dark-mode">
+
+    <div class="container-fluid h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-md-6">
+                
+                <div class="text-center">
+                    <h1 class="text-danger my-4">Story Item Edit: {{storyitem.story_title}}</h1>
+                </div>
+
+                <form id="updateForm" action="/update//{{storyitem.idstoryitems}}" method="post">
+
+                    {% with messages = get_flashed_messages(category_filter=['register']) %}
+                        {% if messages %}
+                            <div class="alert alert-danger" role="alert">
+                                <strong><u>Entry Error:</u></strong>
+                                {% for message in messages %}
+                                    <p class="mt-2"> - {{message}}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="form-group">
+                        <label for="story_title" class="text-danger">Story/Title:</label>
+                        {% if storyitem.story_title %}
+                            <input value="{{storyitem.story_title}}" type="text" class="form-control" name="story_title" id="story/title" placeholder="Enter story_title...">
+                        {% else %}
+                            <input type="text" class="form-control" name="story_title" id="story_title" placeholder="Enter story/title...">
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="role" class="text-danger">Description:</label>
+                        {% if storyitem.description %}
+                            <input value="{{storyitem.description}}" type="text" class="form-control" name="description" id="description" placeholder="Enter description...">
+                        {% else %}
+                            <input type="text" class="form-control" name="description" id="description" placeholder="Enter description...">
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="lookup_key" class="text-danger">Story/Item's lookup key</label>
+                        {% if storyitem.lookup_key %}
+                            <input value="{{storyitem.lookup_key}}" type="text" class="form-control" name="lookup_key" id="lookup_key" placeholder="Enter lookup key...">
+                        {% else %}
+                            <input type="text" class="form-control" name="lookup_key" id="lookup_key" placeholder="Enter lookup key...">
+                        {% endif %}
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="item_content" class="text-danger">Item Content</label>
+                        {% if storyitem.item_content %}
+                            <input value="{{storyitem.item_content}}" type="textarea" rows="3" resize="vertical" class="form-control" name="item_content" id="item_content" placeholder="Please enter item/story content here">
+                        {% else %}
+                            <input type="textarea" rows="3" resize="vertical" class="form-control" name="item_content" id="item_content" placeholder="Please enter item/story content here">
+                        {% endif %}
+                        
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="/admin_storyitem_view" class="btn btn-link text-center text-danger text-decoration-none col-2 mr-3 border-danger">Cancel</a>
+                        <button type="submit" value="Enter" class="my-4 btn btn-danger btn-block col-9">Submit {{story_title}} Edits</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function clearForm(){
+            document.getElementById("regForm").reset();
+        }
+
+    </script>
+
+</body>
+</html>

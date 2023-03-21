@@ -10,13 +10,6 @@
     <div class="container-fluid h-100">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-md-6">
-
-                <p id="dark_p" onclick=toggle() class="text-danger text-right mt-5 mb-1 small">Dark Mode</p>
-                <div class="mt-0 form-group text-right">
-                    <div class="custom-control switch" id="switchDiv">
-                        <p id="switch"></p>
-                    </div>
-                </div>
                 
                 <div class="text-center">
                     <h1 class="text-danger my-4">Character Edit: {{character.login_username}}</h1>
@@ -81,61 +74,6 @@
     </div>
 
     <script>
-        let switchBtn = document.querySelector("#switch");
-        const body = document.querySelector("body");
-        const html = document.querySelector("html");
-
-        switchBtn.addEventListener("change", (event) => {
-            if(event.target.checked){
-                body.classList.remove("light-mode");
-                body.classList.add("dark-mode");
-                html.classList.add("dark-mode");
-            } else {
-                body.classList.remove("dark-mode");
-                body.classList.add("light-mode");
-                html.classList.remove("dark-mode");
-            }
-        });
-
-        function toggle(){
-
-            let switchToggle
-
-            document.getElementById("switchDiv").innerHTML.length <= 65 ? 
-                switchToggle = true : 
-                switchToggle = false
-
-            if(switchToggle){
-
-                if(body.classList.contains("light-mode")){
-                    body.classList.remove("light-mode");
-                    body.classList.add("dark-mode");
-                    html.classList.add("dark-mode");
-                }
-                    
-                document.getElementById("switchDiv").innerHTML = 
-                `
-                    <input type="checkbox" class="custom-control-input switch" id="switch" name="switch" checked/>
-                    <label class="form control custom-control-label text-danger" for="switch"></label>
-                `
-            } else {
-                document.getElementById("switchDiv").innerHTML = `<p id="switch"></p>`
-            }
-
-            switchBtn = document.querySelector("#switch");
-
-            switchBtn.addEventListener("change", (event) => {
-                if(event.target.checked){
-                    body.classList.remove("light-mode");
-                    body.classList.add("dark-mode");
-                    html.classList.add("dark-mode");
-                } else {
-                    body.classList.remove("dark-mode");
-                    body.classList.add("light-mode");
-                    html.classList.remove("dark-mode");
-                }
-            });
-        }
 
         function clearForm(){
             document.getElementById("regForm").reset();
